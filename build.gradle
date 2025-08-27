@@ -107,6 +107,9 @@ tasks.named('processResources', ProcessResources).configure {
 
 // Example for how to get properties into the manifest for reading at runtime.
 tasks.named('jar', Jar).configure {
+    doFirst {
+        file('releases').mkdirs()
+    }
     manifest {
         attributes([
                 'Specification-Title'     : mod_id,
@@ -118,7 +121,7 @@ tasks.named('jar', Jar).configure {
                 'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
-
+    destinationDirectory = file('releases')
     // This is the preferred method to reobfuscate your jar file
     finalizedBy 'reobfJar'
 }
