@@ -18,19 +18,14 @@ import org.slf4j.Logger;
 @Mod(NoCreativeDrift.MODID)
 public class NoCreativeDrift
 {
-    // Define mod id in a common place for everything to reference
     public static final String MODID = "nocreativedrift";
-    // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public NoCreativeDrift(FMLJavaModLoadingContext context)
     {
         IEventBus modEventBus = context.getModEventBus();
-
-        // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
 
-        // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
 
         // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
