@@ -14,4 +14,5 @@ plugins {
 
 rootProject.name = 'nocreativedrift'
 
+include 'forge-1.18.2'
 include 'forge-1.20.1'
