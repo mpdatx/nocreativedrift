@@ -4,7 +4,15 @@ Dampens horizontal drift in creative flight: when movement keys are released
 while flying, the player's horizontal velocity diminishes to zero over a few
 ticks instead of coasting indefinitely.
 
-Supported Minecraft versions:
+Official releases (Fabric, Forge, and NeoForge) are published on Modrinth:
+  https://modrinth.com/mod/nocreativedrift/versions?l=forge
+
+This repo only exists to build Forge jars for Minecraft versions that aren't
+covered by the official release page. If the version you need is already
+listed on Modrinth, grab it from there -- this repo won't produce anything
+different or newer.
+
+Supported Minecraft versions in this repo:
   - 1.18.2  (Forge 40.3.0+)   forge-1.18.2/
   - 1.20.1  (Forge 47.4.6+)   forge-1.20.1/
 
