@@ -38,6 +38,10 @@ gradle-app.setting
 *.iws
 *.ipr
 
+## VS Code
+
+.vscode/
+
 ## Eclipse
 
 eclipse/
