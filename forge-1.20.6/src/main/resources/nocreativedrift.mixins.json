@@ -1,0 +1,9 @@
+{
+  "required": true,
+  "package": "net.krilion.minecraft.nocreativedrift.mixins",
+  "compatibilityLevel": "JAVA_21",
+  "minVersion": "0.8",
+  "client": [
+    "MixinLocalPlayer"
+  ]
+}
