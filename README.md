@@ -40,7 +40,7 @@ produce anything better.
 | 1.20       | 46.0.14+ | `forge-1.20.0/` | In the official coverage gap (1.19.4 – 1.20.3)       |
 | 1.20.1     | 47.4.6+  | `forge-1.20.1/` | In the official coverage gap (1.19.4 – 1.20.3)       |
 | 1.20.2     | 48.1.0+  | `forge-1.20.2/` | In the official coverage gap (1.19.4 – 1.20.3)       |
-| 1.20.3     | 49.0.31+ | `forge-1.20.3/` | In the official coverage gap (1.19.4 – 1.20.3)       |
+| 1.20.3     | 49.0.2   | `forge-1.20.3/` | Forge only ever shipped 49.0.1 and 49.0.2 for 1.20.3 |
 | 1.20.6     | 50.1.0+  | `forge-1.20.6/` | Above the official ceiling (no official Forge build) |
 | 1.21.1     | 52.1.0+  | `forge-1.21.1/` | Above the official ceiling (no official Forge build) |
 

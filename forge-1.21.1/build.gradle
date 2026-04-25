@@ -122,8 +122,8 @@ tasks.named('jar', Jar).configure {
         ])
     }
     destinationDirectory = file("${rootProject.projectDir}/releases")
-    // This is the preferred method to reobfuscate your jar file
-    finalizedBy 'reobfJar'
+    // 1.20.5+ ships with Mojang official mappings at runtime, so there is no
+    // reobfJar step.
 }
 
 // Example configuration to allow publishing using the maven-publish plugin
