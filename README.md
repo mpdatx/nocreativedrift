@@ -36,7 +36,13 @@ produce anything better.
 | MC version | Forge    | Subproject      | Notes                                                |
 | ---------- | -------- | --------------- | ---------------------------------------------------- |
 | 1.18.2     | 40.3.0+  | `forge-1.18.2/` | Redundant with official — kept from earlier work     |
+| 1.19.4     | 45.3.0+  | `forge-1.19.4/` | In the official coverage gap (1.19.4 – 1.20.3)       |
+| 1.20       | 46.0.14+ | `forge-1.20.0/` | In the official coverage gap (1.19.4 – 1.20.3)       |
 | 1.20.1     | 47.4.6+  | `forge-1.20.1/` | In the official coverage gap (1.19.4 – 1.20.3)       |
+| 1.20.2     | 48.1.0+  | `forge-1.20.2/` | In the official coverage gap (1.19.4 – 1.20.3)       |
+| 1.20.3     | 49.0.31+ | `forge-1.20.3/` | In the official coverage gap (1.19.4 – 1.20.3)       |
+| 1.20.6     | 50.1.0+  | `forge-1.20.6/` | Above the official ceiling (no official Forge build) |
+| 1.21.1     | 52.1.0+  | `forge-1.21.1/` | Above the official ceiling (no official Forge build) |
 
 Each version is an independent Gradle subproject with its own source set.
 Shared mod metadata (`mod_id`, `mod_version`, etc.) lives in the root
@@ -46,31 +52,39 @@ Shared mod metadata (`mod_id`, `mod_version`, etc.) lives in the root
 ## Build
 
 ```sh
-./gradlew build                 # builds both versions
-./gradlew :forge-1.20.1:build   # builds just 1.20.1
-./gradlew :forge-1.18.2:build   # builds just 1.18.2
+./gradlew build                 # builds every subproject
+./gradlew :forge-1.20.1:build   # builds just one
+./gradlew :forge-1.21.1:build   # builds just one
 ```
 
-Outputs land in `./releases/`:
+Outputs land in `./releases/`, one per subproject:
 
 - `nocreativedrift-1.18.2-1.0.0.jar`
+- `nocreativedrift-1.19.4-1.0.0.jar`
+- `nocreativedrift-1.20-1.0.0.jar`
 - `nocreativedrift-1.20.1-1.0.0.jar`
+- `nocreativedrift-1.20.2-1.0.0.jar`
+- `nocreativedrift-1.20.3-1.0.0.jar`
+- `nocreativedrift-1.20.6-1.0.0.jar`
+- `nocreativedrift-1.21.1-1.0.0.jar`
 
 ## Future work
 
-Potential gap-filling Forge builds:
+Remaining gap-fillers not yet covered here:
 
 Between 1.19.3 and 1.20.4:
 
-- [ ] 1.19.4
-- [ ] 1.20.0
-- [ ] 1.20.2
-- [ ] 1.20.3
+- [x] 1.19.4
+- [x] 1.20.0
+- [x] 1.20.2
+- [x] 1.20.3
 
 Above 1.20.4 (no official Forge at all):
 
-- [ ] 1.20.5 / 1.20.6
-- [ ] 1.21.x
+- [x] 1.20.6 (1.20.5 has no Forge release; Forge skipped from 1.20.4 to 1.20.6)
+- [x] 1.21.1
+- [ ] 1.21.0, 1.21.2, 1.21.3, 1.21.4 — not yet covered; 1.21.1 is the most
+      common in the wild
 
 To add one, create a new subproject directory `forge-<mc>/` with its own
 `build.gradle`, `gradle.properties`, and `src/main/`, then add
