@@ -8,3 +8,92 @@
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
+
+// Static jar validation wired into every Forge subproject's `check` (and
+// therefore `build`). Catches packaging regressions: missing mixin class,
+// missing refmap, unexpanded ${...} tokens, modid drift across files.
+subprojects {
+    plugins.withId('net.minecraftforge.gradle') {
+        tasks.register('validateJar') {
+            description = 'Sanity-checks the built jar: mod metadata, mixin config, token expansion.'
+            group = 'verification'
+            def jarTask = tasks.named('jar')
+            dependsOn jarTask
+            def jarFile = jarTask.flatMap { it.archiveFile }
+            inputs.file(jarFile)
+            def expectedModId = mod_id
+            def expectedModVersion = mod_version
+            def projectName = project.name
+            doLast {
+                def f = jarFile.get().asFile
+                def zip = new java.util.zip.ZipFile(f)
+                try {
+                    def read = { String name ->
+                        def e = zip.getEntry(name)
+                        if (e == null) {
+                            throw new GradleException("[${projectName}] missing entry: ${name}")
+                        }
+                        zip.getInputStream(e).getText('UTF-8')
+                    }
+                    def hasEntry = { String name -> zip.getEntry(name) != null }
+
+                    // mods.toml: tokens expanded, modid + version match root gradle.properties.
+                    def modsToml = read('META-INF/mods.toml')
+                    if (modsToml.contains('${')) {
+                        throw new GradleException("[${projectName}] mods.toml has unexpanded \${...} tokens")
+                    }
+                    def modIdQ = java.util.regex.Pattern.quote(expectedModId)
+                    if (!(modsToml =~ /modId\s*=\s*"${modIdQ}"/)) {
+                        throw new GradleException("[${projectName}] mods.toml modId does not match '${expectedModId}'")
+                    }
+                    def verQ = java.util.regex.Pattern.quote(expectedModVersion)
+                    if (!(modsToml =~ /version\s*=\s*"${verQ}"/)) {
+                        throw new GradleException("[${projectName}] mods.toml version does not match '${expectedModVersion}'")
+                    }
+
+                    // Mixin config: declared mixin classes are actually present in the jar.
+                    def mixinJson = new groovy.json.JsonSlurper().parseText(read('nocreativedrift.mixins.json'))
+                    def pkg = mixinJson.package
+                    if (!pkg) {
+                        throw new GradleException("[${projectName}] mixin config has no 'package'")
+                    }
+                    def mixinNames = []
+                    ['mixins', 'client', 'server'].each { side ->
+                        if (mixinJson[side]) mixinNames.addAll(mixinJson[side])
+                    }
+                    if (mixinNames.isEmpty()) {
+                        throw new GradleException("[${projectName}] mixin config declares no mixin classes")
+                    }
+                    mixinNames.each { String name ->
+                        def path = "${pkg.replace('.', '/')}/${name}.class"
+                        if (!hasEntry(path)) {
+                            throw new GradleException("[${projectName}] mixin '${name}' missing class entry: ${path}")
+                        }
+                    }
+
+                    // Refmap: required only if the mixin config declares one.
+                    // 1.20.5+ runs against Mojang official mappings, so no
+                    // refmap is generated and the field is omitted.
+                    def declaredRefmap = mixinJson.refmap
+                    if (declaredRefmap) {
+                        if (!hasEntry(declaredRefmap)) {
+                            throw new GradleException("[${projectName}] missing refmap declared in mixin config: ${declaredRefmap}")
+                        }
+                    }
+
+                    // pack.mcmeta: tokens expanded, parseable JSON.
+                    def packMeta = read('pack.mcmeta')
+                    if (packMeta.contains('${')) {
+                        throw new GradleException("[${projectName}] pack.mcmeta has unexpanded \${...} tokens")
+                    }
+                    new groovy.json.JsonSlurper().parseText(packMeta)
+
+                    logger.lifecycle("[${projectName}] validateJar OK (${f.name})")
+                } finally {
+                    zip.close()
+                }
+            }
+        }
+        tasks.named('check').configure { dependsOn 'validateJar' }
+    }
+}

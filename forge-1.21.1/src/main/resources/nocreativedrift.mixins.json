@@ -3,7 +3,6 @@
   "package": "net.krilion.minecraft.nocreativedrift.mixins",
   "compatibilityLevel": "JAVA_21",
   "minVersion": "0.8",
-  "refmap": "mixins.nocreativedrift.refmap.json",
   "client": [
     "MixinLocalPlayer"
   ]
